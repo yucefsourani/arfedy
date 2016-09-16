@@ -125,12 +125,12 @@ def __install_kernel_headers_devel():
 		check=subprocess.call("dnf -y --best install kernel-devel-%s  kernel-headers-%s \
 		@c-development @development-tools"%(kernel,kernel),shell=True)
 		if check!=0:
-			return main("Error Check Your Connection || Check dnf.")
+			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
 	else:
 		check=subprocess.call("dnf -y --best install kernel-PAE-%s kernel-devel-%s  kernel-headers-%s \
 		@c-development @development-tools"%(kernel,kernel,kernel),shell=True)
 		if check!=0:
-			return main("Error Check Your Connection || Check dnf.")
+			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
 
 def installvirtuablox():
 	check_root()
@@ -206,7 +206,16 @@ def msg(m):
 			return main()
 		elif y_n=="q" or y_n=="Q":
 			sys.exit("\nBye...\n")
-			
+
+
+def install_broadcom_driver():
+	__install_kernel_headers_devel()
+	install_rpmfusionrepos()
+	check=subprocess.call("dnf install akmod-wl -y --best",shell=True)
+	if check!=0:
+		return main("Install Broadcom WiFi Driver Fail.")
+	
+	 
 def main(ms=""):
 	subprocess.call("clear")
 	if len(ms)!=0:
@@ -224,7 +233,8 @@ def main(ms=""):
 8-Install Compression Programs unzip/unar... .\n\n\n\
 9-Install Torrent Client qbittorrent.                                    \
 10-Add User To Sudoers.\n\n\n\
-11-Install All.")
+11-Install Broadcom WiFi Driver.\t\t\t\t\t \
+12-Install All (Without Install Drivers).")
 		
 		talwin("\n%s\n"%ms,"red")
 		talwin("Choice Number || q to Exit.\n-","blue",end="")
@@ -283,6 +293,11 @@ def main(ms=""):
 			return main("Success Please Restart You PC.")
 			
 		elif answer=="11":
+			msg("Install Broadcom WiFi Driver.")
+			install_broadcom_driver()
+			return main("Install Broadcom WiFi Driver Success Please Restart You PC.")
+
+		elif answer=="12":
 			msg("Install All.")
 			install_codecs()
 			installvirtuablox()
