@@ -9,7 +9,7 @@ www.arfedora.com
 
 #Screenshot
 
-![Alt text](https://github.com/yucefsourani/arfedy/raw/master/arfedy.jpg "Screenshot")
+![Alt text](https://github.com/yucefsourani/arfedy/raw/master/screenshot.jpg "Screenshot")
 
 
 
