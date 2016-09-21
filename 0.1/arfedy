@@ -218,6 +218,7 @@ def install_broadcom_driver():
 	 
 def main(ms=""):
 	subprocess.call("clear")
+	talwin("\nhttp://www.arfedora.com/","red")
 	if len(ms)!=0:
 		ms="((((%s))))"%ms
 	while True:
