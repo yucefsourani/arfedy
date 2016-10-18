@@ -14,6 +14,8 @@ www.arfedora.com
 
 
 * To Use
+ * ``` sudo dnf install git or su -c "dnf install git" ```
+ 
  * ``` cd && git clone https://github.com/yucefsourani/arfedy ```
 
  * ``` sudo chmod 755 ~/arfedy/0.1/arfedy or su -c "chmod 755 arfedy/0.1/arfedy" ```
