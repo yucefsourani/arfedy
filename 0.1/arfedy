@@ -37,16 +37,34 @@ dirname=os.path.abspath(os.path.dirname(__file__))
 arch=platform.machine()
 gb=True
 
+
+def get_distro_name():
+	result={}
+	if not os.path.isfile("/etc/os-release"):
+		return None
+	with open("/etc/os-release","r") as myfile:
+		for l in myfile.readlines():
+			if l.startswith("ID"):
+				result.setdefault("ID",l.split("=")[1].strip())
+			elif l.startswith("VERSION_ID"):
+				result.setdefault("VERSION_ID",l.split("=")[1].strip())
+	return result
+
+
+distro_name_version=get_distro_name()
+d_name=distro_name_version["ID"]
+d_version=distro_name_version["VERSION_ID"]
+
 def init_check():
 	versions=["23","24","25"]
-	if platform.linux_distribution()[0]!="Fedora":
+	if d_name!="fedora":
 		sys.exit("Fedora Not Found.")
 		
 	if not sys.version.startswith("3"):
 		sys.exit("Use Python 3 Try run python3 arfedy.py")
 		
-	if platform.linux_distribution()[1] not in versions:
-		sys.exit("Fedora Version %s Not Supported."%platform.linux_distribution()[1])
+	if  d_version not in versions:
+		sys.exit("Distro Version %s Not Supported."%platform.linux_distribution()[1])
 init_check()
 
 
@@ -160,8 +178,8 @@ def install_compressp():
 def install_rpmfusionrepos():
 	check_root()
 	check=subprocess.call("dnf install  --best -y --nogpgcheck  \
-	http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-	http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm",shell=True)
+	http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-%s.noarch.rpm \
+	http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-%s.noarch.rpm"%(d_version,d_version),shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
 	
