@@ -64,7 +64,7 @@ def init_check():
 		sys.exit("Use Python 3 Try run python3 arfedy.py")
 		
 	if  d_version not in versions:
-		sys.exit("Distro Version %s Not Supported."%platform.linux_distribution()[1])
+		sys.exit("Distro Version %s Not Supported."%d_version)
 init_check()
 
 
