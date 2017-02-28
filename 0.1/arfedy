@@ -145,7 +145,7 @@ def __install_kernel_headers_devel():
 		if check!=0:
 			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
 	else:
-		check=subprocess.call("dnf -y --best install kernel-PAE-%s kernel-devel-%s  kernel-headers-%s \
+		check=subprocess.call("dnf -y --best install kernel-PAE-devel-%s kernel-devel-%s  kernel-headers-%s \
 		@c-development @development-tools"%(kernel,kernel,kernel),shell=True)
 		if check!=0:
 			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
