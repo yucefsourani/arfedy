@@ -57,8 +57,9 @@ d_version=distro_name_version["VERSION_ID"]
 
 def init_check():
 	versions=["23","24","25"]
-	if d_name!="fedora":
-		sys.exit("Fedora Not Found.")
+	if d_name!="ojuba":
+		if d_name!="fedora":
+			sys.exit("Fedora Not Found.")
 		
 	if not sys.version.startswith("3"):
 		sys.exit("Use Python 3 Try run python3 arfedy.py")
