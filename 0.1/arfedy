@@ -192,7 +192,7 @@ def install_codecs():
 	 gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk --setopt=strict=0",shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
-	subprocess.call("dnf --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264 --setopt=strict=0",shell=True)
+	subprocess.call("dnf install --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264 --setopt=strict=0",shell=True)
 
 def install_torrent_client():
 	check_root()
