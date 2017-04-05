@@ -71,7 +71,7 @@ init_check()
 
 def check_root():
 	if os.getuid()!=0:
-		return main("\n\nRun Script With Root Permissions.\n\n\nTry :\n\n1-sudo python3 arfedy.py\n\n2-su -c \"python3 arfedy.py\"\n\n")
+		return main("\n\nRun Script With Root Permissions.\n\n\nTry :\n\n1-sudo python3 arfedy\n\n2-su -c \"python3 arfedy\"\n\n")
 		
 		
 def __get_kernel_name():
@@ -155,7 +155,7 @@ def installvirtuablox():
 	check_root()
 	__install_kernel_headers_devel()
 	install_rpmfusionrepos()
-	subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1  --setopt=clean_requirements_on_remove=False \
+	subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 --setopt=clean_requirements_on_remove=False \
 	--setop=strict=False -y --best",shell=True)
 	check=subprocess.call("dnf -y --best install VirtualBox",shell=True)
 	if check!=0:
@@ -189,16 +189,15 @@ def install_codecs():
 	install_rpmfusionrepos()
 	subprocess.call("dnf config-manager --set-enabled fedora-cisco-openh264 -y",shell=True)
 	check=subprocess.call("dnf install  --best -y \
-	gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} \
-	libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras \
-	gstreamer-plugins-fc gstreamer-rtsp lame  gstreamer-ffmpeg ffmpeg x264 faad2 flac  mozilla-openh264 gstreamer1-plugin-openh264 \
-	--setopt=strict=0",shell=True)
+	 gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} \ 
+	 libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc \
+	 gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk --setopt=strict=0",shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
 
 def install_torrent_client():
 	check_root()
-	check=subprocess.call("dnf install  --best -y qbittorrent",shell=True)
+	check=subprocess.call("dnf install  --best -y deluge",shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
 	
@@ -252,7 +251,7 @@ def main(ms=""):
 7-Add FastestMirror To DNF.\t\t\t\t\t\t \
 8-Install Arabic Fonts.\n\n\n\
 9-Install Compression Programs unzip/unar... .\t\t\t\t \
-10-Install Torrent Client qbittorrent.\n\n\n\
+10-Install Torrent Client deluge.\n\n\n\
 11-Add User To Sudoers.\t\t\t\t\t\t\t \
 12-Install Broadcom WiFi Driver.\n\n\n\
 13-Install All (Without Install Drivers).")
@@ -308,9 +307,9 @@ def main(ms=""):
 			return main("Install Compression Programs Success.")
 			
 		elif answer=="10":
-			msg("Install Torrent Client qbittorrent.")
+			msg("Install Torrent Client deluge.")
 			install_torrent_client()
-			return main("Install qbittorrent Success.")
+			return main("Install deluge Success.")
 
 		elif answer=="11":
 			msg("Add User To Sudoers.")
