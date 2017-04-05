@@ -191,7 +191,7 @@ def install_codecs():
 	check=subprocess.call("dnf install  --best -y \
 	 gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} \ 
 	 libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc \
-	 gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk --setopt=strict=0",shell=True)
+	 gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk mozilla-openh264 gstreamer1-plugin-openh264 openh264 --setopt=strict=0",shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
 
