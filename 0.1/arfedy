@@ -56,7 +56,7 @@ d_name=distro_name_version["ID"]
 d_version=distro_name_version["VERSION_ID"]
 
 def init_check():
-	versions=["23","24","25"]
+	versions=["23","24","25","26"]
 	if d_name!="ojuba":
 		if d_name!="fedora":
 			sys.exit("Fedora Not Found.")
