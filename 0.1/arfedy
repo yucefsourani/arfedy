@@ -250,6 +250,9 @@ def set_selinux_permissive():
         
 	if not b:
 		return main("Nothing to do.")
+	else:
+		with open("/etc/selinux/config","w") as myfile:
+			myfile.write(result)
 
 	 
 def main(ms=""):
