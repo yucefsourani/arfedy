@@ -199,7 +199,7 @@ def install_torrent_client():
 	check=subprocess.call("dnf install  --best -y deluge",shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
-	
+
 def add_user_to_sudoers():
 	if os.getuid()!=0:
 		talwin("\nPlease Enter Root Password.\n","red")
@@ -231,7 +231,26 @@ def install_broadcom_driver():
 	check=subprocess.call("dnf install akmod-wl -y --best",shell=True)
 	if check!=0:
 		return main("Install Broadcom WiFi Driver Fail.")
-	
+
+def set_selinux_permissive():
+	check_root()
+	result = ""
+	b = False
+	with open("/etc/selinux/config","r") as myfile: 
+		for line in myfile.readlines():
+			line = line.strip() 
+			if line.startswith("SELINUX="):
+				if line.split("=")[1] == "enforcing":
+					line = "SELINUX=permissive"
+					b = True
+			result+=line+"\n"
+
+	with open("/etc/selinux/config","w") as myfile:
+		myfile.write(result)
+        
+	if not b:
+		return main("Nothing to do.")
+
 	 
 def main(ms=""):
 	subprocess.call("clear")
@@ -253,7 +272,8 @@ def main(ms=""):
 10-Install Torrent Client deluge.\n\n\n\
 11-Add User To Sudoers.\t\t\t\t\t\t\t \
 12-Install Broadcom WiFi Driver.\n\n\n\
-13-Install All (Without Install Drivers).")
+13-Set Selinux To Permissive (IF NOT DISABLED).\t\t\t\t \
+14-Install All (Without Drivers And Selinux).")
 		
 		talwin("\n%s\n"%ms,"red")
 		talwin("Choice Number || q to Exit.\n-","blue",end="")
@@ -314,13 +334,18 @@ def main(ms=""):
 			msg("Add User To Sudoers.")
 			add_user_to_sudoers()
 			return main("Success Please Restart You PC.")
-			
+
 		elif answer=="12":
 			msg("Install Broadcom WiFi Driver.")
 			install_broadcom_driver()
 			return main("Install Broadcom WiFi Driver Success Please Restart You PC.")
 
 		elif answer=="13":
+			msg("Set Selinux To Permissive.")
+			set_selinux_permissive()
+			return main("Success Please Restart You PC.")
+
+		elif answer=="14":
 			msg("Install All.")
 			install_codecs()
 			installvirtuablox()
