@@ -245,8 +245,6 @@ def set_selinux_permissive():
 					b = True
 			result+=line+"\n"
 
-	with open("/etc/selinux/config","w") as myfile:
-		myfile.write(result)
         
 	if not b:
 		return main("Nothing to do.")
