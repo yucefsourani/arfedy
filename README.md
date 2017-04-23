@@ -21,3 +21,8 @@ www.arfedora.com
  * ``` sudo chmod 755 ~/arfedy/0.1/arfedy or su -c "chmod 755 arfedy/0.1/arfedy" ```
 
  * ``` sudo ~/arfedy/0.1/arfedy or su -c "arfedy/0.1/arfedy"```
+
+
+For Test
+For Test 
+For Test
