@@ -7,7 +7,6 @@
 #
 #  www.arfedora.blogspot.com
 #
-#  www.arfedora.com
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -255,7 +254,7 @@ def set_selinux_permissive():
 	 
 def main(ms=""):
 	subprocess.call("clear")
-	talwin("\nhttp://www.arfedora.com/","red")
+	talwin("\nhttp://www.arfedora.blogspot.com/","red")
 	if len(ms)!=0:
 		ms="((((%s))))"%ms
 	while True:
