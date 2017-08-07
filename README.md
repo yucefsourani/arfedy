@@ -22,6 +22,3 @@ www.arfedora.blogspot.com
  * ``` sudo ~/arfedy/0.1/arfedy or su -c "arfedy/0.1/arfedy"```
 
 
-For Test
-For Test 
-For Test
