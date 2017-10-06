@@ -186,10 +186,10 @@ def install_rpmfusionrepos():
 def install_codecs():
 	check_root()
 	install_rpmfusionrepos()
-	check=subprocess.call(" dnf install gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} \ 
-	libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc \ 
-	gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk  \ 
-	 lsdvd libdvdread libdvdnav  --setopt=strict=0",shell=True)
+	check=subprocess.call(" dnf install gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} \
+	libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc \
+	gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk  \
+	lsdvd libdvdread libdvdnav  --setopt=strict=0",shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
 	subprocess.call("dnf config-manager --set-enabled fedora-cisco-openh264",shell=True)
