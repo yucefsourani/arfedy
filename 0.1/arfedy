@@ -55,7 +55,7 @@ d_name=distro_name_version["ID"]
 d_version=distro_name_version["VERSION_ID"]
 
 def init_check():
-	versions=["23","24","25","26","27"]
+	versions=["25","26","27","28"]
 	if d_name!="ojuba":
 		if d_name!="fedora":
 			sys.exit("Fedora Not Found.")
@@ -136,25 +136,31 @@ gpgkey=https://dl.google.com/linux/linux_signing_key.pub
 		gb=False
 		talwin("Google Chrome Support GNU/LINUX 64bit Only.","red")
 
-def __install_kernel_headers_devel():
+def __install_kernel_headers_devel(d=False):
 	check_root()
 	kernel=__get_kernel_name()
 	if arch=="x86_64":
-		check=subprocess.call("dnf -y --best install kernel-devel-%s  kernel-headers-%s \
-		@c-development @development-tools"%(kernel,kernel),shell=True)
+		check=subprocess.call("dnf -y --best install kernel kernel-devel  kernel-headers \
+		@c-development @development-tools",shell=True)
 		if check!=0:
 			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
+		else:
+			if d:
+				return main("Success ,Restart System And Boot From Newest Kernel.")
 	else:
-		check=subprocess.call("dnf -y --best install kernel-PAE-devel-%s kernel-devel-%s  kernel-headers-%s \
+		check=subprocess.call("dnf -y --best install kernel-PAE-devel kernel-devel  kernel-headers \
 		@c-development @development-tools"%(kernel,kernel,kernel),shell=True)
 		if check!=0:
 			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
+		else:
+			if d:
+				return main("Success ,Restart System And Boot From Newest Kernel.")
 
 def installvirtuablox():
 	check_root()
 	__install_kernel_headers_devel()
 	install_rpmfusionrepos()
-	subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 --setopt=clean_requirements_on_remove=False \
+	subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 VirtualBox-5.3 --setopt=clean_requirements_on_remove=False \
 	--setop=strict=False -y --best",shell=True)
 	check=subprocess.call("dnf -y --best install VirtualBox",shell=True)
 	if check!=0:
@@ -186,10 +192,7 @@ def install_rpmfusionrepos():
 def install_codecs():
 	check_root()
 	install_rpmfusionrepos()
-	check=subprocess.call(" dnf install gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} \
-	libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc \
-	gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk  \
-	lsdvd libdvdread libdvdnav  --setopt=strict=0",shell=True)
+	check=subprocess.call("dnf install gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk mozilla-openh264 gstreamer1-plugin-openh264 openh264 lsdvd libdvdread libdvdnav  gstreamer1-plugins-good-extras gstreamer1-vaapi  -y --best --setopt=strict=0",shell=True)
 	if check!=0:
 		return main("Error Check Your Connection || Check dnf.")
 	subprocess.call("dnf config-manager --set-enabled fedora-cisco-openh264",shell=True)
@@ -208,6 +211,8 @@ def install_torrent_client():
 		return main("Error Check Your Connection || Check dnf.")
 
 def add_user_to_sudoers():
+	if d_version=="28":
+		return main("Fedora 28 Detected Nothing To Do.")
 	if os.getuid()!=0:
 		talwin("\nPlease Enter Root Password.\n","red")
 		check=subprocess.call("su -c \"usermod -a -G wheel %s\" "%os.getenv("LOGNAME"),shell=True)
@@ -239,6 +244,8 @@ def install_broadcom_driver():
 	if check!=0:
 		return main("Install Broadcom WiFi Driver Fail.")
 
+
+
 def set_selinux_permissive():
 	check_root()
 	result = ""
@@ -246,8 +253,8 @@ def set_selinux_permissive():
 	with open("/etc/selinux/config","r") as myfile: 
 		for line in myfile.readlines():
 			line = line.strip() 
-			if line.startswith("SELINUX="):
-				if line.split("=")[1] == "enforcing":
+			if line.replace(" ","").startswith("SELINUX="):
+				if line.split("=",1)[1].strip() == "enforcing":
 					line = "SELINUX=permissive"
 					b = True
 			result+=line+"\n"
@@ -298,8 +305,8 @@ def main(ms=""):
 
 		elif answer=="3":
 			msg("Install kernel-heasers kernel-devel.")
-			__install_kernel_headers_devel()
-			return main("\nInstall kernel-heasers kernel-devel Success.\n")
+			__install_kernel_headers_devel(True)
+
 			
 		elif answer=="4":
 			msg("Install VirtualBox From RPMFUSION Repos.")
