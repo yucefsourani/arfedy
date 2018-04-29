@@ -38,16 +38,16 @@ gb=True
 
 
 def get_distro_name():
-	result={}
-	if not os.path.isfile("/etc/os-release"):
-		return None
-	with open("/etc/os-release","r") as myfile:
-		for l in myfile.readlines():
-			if l.startswith("ID"):
-				result.setdefault("ID",l.split("=")[1].strip())
-			elif l.startswith("VERSION_ID"):
-				result.setdefault("VERSION_ID",l.split("=")[1].strip())
-	return result
+    result={}
+    if not os.path.isfile("/etc/os-release"):
+        return None
+    with open("/etc/os-release","r") as myfile:
+        for l in myfile.readlines():
+            if l.startswith("ID"):
+                result.setdefault("ID",l.split("=")[1].strip())
+            elif l.startswith("VERSION_ID"):
+                result.setdefault("VERSION_ID",l.split("=")[1].strip())
+    return result
 
 
 distro_name_version=get_distro_name()
@@ -55,69 +55,69 @@ d_name=distro_name_version["ID"]
 d_version=distro_name_version["VERSION_ID"]
 
 def init_check():
-	versions=["25","26","27","28"]
-	if d_name!="ojuba":
-		if d_name!="fedora":
-			sys.exit("Fedora Not Found.")
-		
-	if not sys.version.startswith("3"):
-		sys.exit("Use Python 3 Try run python3 arfedy.py")
-		
-	if  d_version not in versions:
-		sys.exit("Distro Version %s Not Supported."%d_version)
+    versions=["25","26","27","28"]
+    if d_name!="ojuba":
+        if d_name!="fedora":
+            sys.exit("Fedora Not Found.")
+        
+    if not sys.version.startswith("3"):
+        sys.exit("Use Python 3 Try run python3 arfedy.py")
+        
+    if  d_version not in versions:
+        sys.exit("Distro Version %s Not Supported."%d_version)
 init_check()
 
 
 def check_root():
-	if os.getuid()!=0:
-		return main("\n\nRun Script With Root Permissions.\n\n\nTry :\n\n1-sudo python3 arfedy\n\n2-su -c \"python3 arfedy\"\n\n")
-		
-		
+    if os.getuid()!=0:
+        return main("\n\nRun Script With Root Permissions.\n\n\nTry :\n\n1-sudo python3 arfedy\n\n2-su -c \"python3 arfedy\"\n\n")
+        
+        
 def __get_kernel_name():
-	kernel=platform.release()
-	if arch=="i686":
-		if kernel.endswith("E"):
-			return kernel[0:-4]
-		return kernel
-	else:
-		return kernel
+    kernel=platform.release()
+    if arch=="i686":
+        if kernel.endswith("E"):
+            return kernel[0:-4]
+        return kernel
+    else:
+        return kernel
 
 def add_keepcache():
-	check_root()
-	keepcache="keepcache = True\n"
-	b=True
-	with open("/etc/dnf/dnf.conf","r") as myfile:
-		for line in myfile.readlines():
-			if line.strip().startswith("keepcache"):
-				b=False
-	if b:
-		with open("/etc/dnf/dnf.conf","a") as myfile:
-			myfile.write(keepcache)
+    check_root()
+    keepcache="keepcache = True\n"
+    b=True
+    with open("/etc/dnf/dnf.conf","r") as myfile:
+        for line in myfile.readlines():
+            if line.strip().startswith("keepcache"):
+                b=False
+    if b:
+        with open("/etc/dnf/dnf.conf","a") as myfile:
+            myfile.write(keepcache)
 
 def add_fastestmirror():
-	check_root()
-	fastestmirror="fastestmirror = True\n"
-	b=True
-	with open("/etc/dnf/dnf.conf","r") as myfile:
-		for line in myfile.readlines():
-			if line.strip().startswith("fastestmirror"):
-				b=False
-	if b:
-		with open("/etc/dnf/dnf.conf","a") as myfile:
-			myfile.write(fastestmirror)
-			
+    check_root()
+    fastestmirror="fastestmirror = True\n"
+    b=True
+    with open("/etc/dnf/dnf.conf","r") as myfile:
+        for line in myfile.readlines():
+            if line.strip().startswith("fastestmirror"):
+                b=False
+    if b:
+        with open("/etc/dnf/dnf.conf","a") as myfile:
+            myfile.write(fastestmirror)
+            
 def install_arabicfonts():
-	check_root()
-	check=subprocess.call("dnf -y --best install @arabic-support",shell=True)
-	if check!=0:
-			return main("Error Check Your Connection || Check dnf.")
-	
+    check_root()
+    check=subprocess.call("dnf -y --best install @arabic-support google-noto-kufi-arabic-fonts google-noto-naskh-arabic-fonts google-noto-naskh-arabic-ui-fonts google-noto-sans-old-south-arabian-fonts",shell=True)
+    if check!=0:
+            return main("Error Check Your Connection || Check dnf.")
+    
 
 def install_googlechrome():
-	check_root()
-	global gb
-	gb=True
-	repo="""
+    check_root()
+    global gb
+    gb=True
+    repo="""
 [google-chrome]
 name=google-chrome
 baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
@@ -125,156 +125,161 @@ enabled=1
 gpgcheck=1
 gpgkey=https://dl.google.com/linux/linux_signing_key.pub
 """
-	if arch=="x86_64":
-		with open("/etc/yum.repos.d/google-chrome.repo","w") as myfile:
-			myfile.write(repo)
-		
-		check=subprocess.call("dnf -y --best install google-chrome-stable",shell=True)
-		if check!=0:
-				return main("Error Check Your Connection || Check dnf.")
-	else:
-		gb=False
-		talwin("Google Chrome Support GNU/LINUX 64bit Only.","red")
+    if arch=="x86_64":
+        with open("/etc/yum.repos.d/google-chrome.repo","w") as myfile:
+            myfile.write(repo)
+        
+        check=subprocess.call("dnf -y --best install google-chrome-stable",shell=True)
+        if check!=0:
+                return main("Error Check Your Connection || Check dnf.")
+    else:
+        gb=False
+        talwin("Google Chrome Support GNU/LINUX 64bit Only.","red")
 
 def __install_kernel_headers_devel(d=False):
-	check_root()
-	kernel=__get_kernel_name()
-	if arch=="x86_64":
-		check=subprocess.call("dnf -y --best install kernel kernel-devel  kernel-headers \
-		@c-development @development-tools",shell=True)
-		if check!=0:
-			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
-		else:
-			if d:
-				return main("Success ,Restart System And Boot From Newest Kernel.")
-	else:
-		check=subprocess.call("dnf -y --best install kernel-PAE-devel kernel-devel  kernel-headers \
-		@c-development @development-tools"%(kernel,kernel,kernel),shell=True)
-		if check!=0:
-			return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
-		else:
-			if d:
-				return main("Success ,Restart System And Boot From Newest Kernel.")
+    check_root()
+    kernel=__get_kernel_name()
+    if arch=="x86_64":
+        check=subprocess.call("dnf -y --best install kernel kernel-devel  kernel-headers \
+        @c-development @development-tools",shell=True)
+        if check!=0:
+            return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
+        else:
+            if d:
+                return main("Success ,Restart System And Boot From Newest Kernel.")
+    else:
+        check=subprocess.call("dnf -y --best install kernel-PAE-devel kernel-devel  kernel-headers \
+        @c-development @development-tools"%(kernel,kernel,kernel),shell=True)
+        if check!=0:
+            return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
+        else:
+            if d:
+                return main("Success ,Restart System And Boot From Newest Kernel.")
 
 def installvirtuablox():
-	check_root()
-	__install_kernel_headers_devel()
-	install_rpmfusionrepos()
-	subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 VirtualBox-5.3 --setopt=clean_requirements_on_remove=False \
-	--setop=strict=False -y --best",shell=True)
-	check=subprocess.call("dnf -y --best install VirtualBox",shell=True)
-	if check!=0:
-		return main("Error Check Your Connection || Check dnf.")
-		
-	check=subprocess.call("usermod -G vboxusers -a $USER",shell=True)
-	if check!=0:
-		return main("Error Add USER To vboxusers Group.")
-	
-	talwin("\nPlease Wait...\n","blue")
-	subprocess.call("akmods --force",shell=True)
-	subprocess.call("systemctl restart systemd-modules-load",shell=True)
-	
+    check_root()
+    __install_kernel_headers_devel()
+    install_rpmfusionrepos()
+    subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 VirtualBox-5.3 --setopt=clean_requirements_on_remove=False \
+    --setop=strict=False -y --best",shell=True)
+    check=subprocess.call("dnf -y --best install VirtualBox",shell=True)
+    if check!=0:
+        return main("Error Check Your Connection || Check dnf.")
+        
+    check=subprocess.call("usermod -G vboxusers -a $USER",shell=True)
+    if check!=0:
+        return main("Error Add USER To vboxusers Group.")
+    
+    talwin("\nPlease Wait...\n","blue")
+    subprocess.call("akmods --force",shell=True)
+    subprocess.call("systemctl restart systemd-modules-load",shell=True)
+    
 
 def install_compressp():
-	check_root()
-	check=subprocess.call("dnf install  --best -y zip p7zip gzip cpio unar p7zip-plugins",shell=True)
-	if check!=0:
-		return main("Error Check Your Connection || Check dnf.")
-	
+    check_root()
+    check=subprocess.call("dnf install  --best -y zip p7zip gzip cpio unar p7zip-plugins",shell=True)
+    if check!=0:
+        return main("Error Check Your Connection || Check dnf.")
+    
 def install_rpmfusionrepos():
-	check_root()
-	check=subprocess.call("dnf install  --best -y --nogpgcheck  \
-	http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-%s.noarch.rpm \
-	http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-%s.noarch.rpm"%(d_version,d_version),shell=True)
-	if check!=0:
-		return main("Error Check Your Connection || Check dnf.")
-	
+    check_root()
+    check=subprocess.call("dnf install  --best -y --nogpgcheck  \
+    http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-%s.noarch.rpm \
+    http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-%s.noarch.rpm"%(d_version,d_version),shell=True)
+    if check!=0:
+        return main("Error Check Your Connection || Check dnf.")
+    
 def install_codecs():
-	check_root()
-	install_rpmfusionrepos()
-	check=subprocess.call("dnf install gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk mozilla-openh264 gstreamer1-plugin-openh264 openh264 lsdvd libdvdread libdvdnav  gstreamer1-plugins-good-extras gstreamer1-vaapi  -y --best --setopt=strict=0",shell=True)
-	if check!=0:
-		return main("Error Check Your Connection || Check dnf.")
-	subprocess.call("dnf config-manager --set-enabled fedora-cisco-openh264",shell=True)
-	check = subprocess.call("dnf install --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264",shell=True)
-	if check!=0:
-		print("Clean metadata.")
-		subprocess.call("dnf clean dbcache",shell=True)
-		subprocess.call("dnf clean metadata",shell=True)
-		print("Done.")
-		subprocess.call("dnf install --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264 --setopt=strict=0",shell=True)
-		
+    check_root()
+    install_rpmfusionrepos()
+    if int(d_version)>27:
+        check=subprocess.call("dnf install gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk  ffmpeg-libs lsdvd libdvdread libdvdnav  gstreamer1-plugins-good-extras gstreamer1-vaapi  -y --best --setopt=strict=0",shell=True)
+        if check!=0:
+            return main("Error Check Your Connection || Check dnf.")
+    else:
+        check=subprocess.call("dnf install gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk mozilla-openh264 gstreamer1-plugin-openh264 ffmpeg-libs openh264 lsdvd libdvdread libdvdnav  gstreamer1-plugins-good-extras gstreamer1-vaapi  -y --best --setopt=strict=0",shell=True)
+        if check!=0:
+            return main("Error Check Your Connection || Check dnf.")
+        subprocess.call("dnf config-manager --set-enabled fedora-cisco-openh264",shell=True)
+        check = subprocess.call("dnf install --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264",shell=True)
+        if check!=0:
+            print("Clean metadata.")
+            subprocess.call("dnf clean dbcache",shell=True)
+            subprocess.call("dnf clean metadata",shell=True)
+            print("Done.")
+            subprocess.call("dnf install --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264 --setopt=strict=0",shell=True)
+        
 def install_torrent_client():
-	check_root()
-	check=subprocess.call("dnf install  --best -y deluge",shell=True)
-	if check!=0:
-		return main("Error Check Your Connection || Check dnf.")
+    check_root()
+    check=subprocess.call("dnf install  --best -y deluge",shell=True)
+    if check!=0:
+        return main("Error Check Your Connection || Check dnf.")
 
 def add_user_to_sudoers():
-	if d_version=="28":
-		return main("Fedora 28 Detected Nothing To Do.")
-	if os.getuid()!=0:
-		talwin("\nPlease Enter Root Password.\n","red")
-		check=subprocess.call("su -c \"usermod -a -G wheel %s\" "%os.getenv("LOGNAME"),shell=True)
-		if check!=0:
-			return main("Add User To sudoers Fail.")
-	else:
-		subprocess.call("usermod -a -G wheel %s"%os.getenv("LOGNAME"),shell=True)
-	
-	
+    if d_version=="28":
+        return main("Fedora 28 Detected Nothing To Do.")
+    if os.getuid()!=0:
+        talwin("\nPlease Enter Root Password.\n","red")
+        check=subprocess.call("su -c \"usermod -a -G wheel %s\" "%os.getenv("LOGNAME"),shell=True)
+        if check!=0:
+            return main("Add User To sudoers Fail.")
+    else:
+        subprocess.call("usermod -a -G wheel %s"%os.getenv("LOGNAME"),shell=True)
+    
+    
 def msg(m):
-	while True:
-		subprocess.call("clear")
-		print()
-		talwin (m,"red")
-		talwin("\nY To Continue || N To Back || Q To Quit : \n-","blue",end="")
-		y_n=input().strip()
-		if y_n=="Y" or y_n=="y":
-			break
-		elif y_n=="N" or y_n=="n":
-			return main()
-		elif y_n=="q" or y_n=="Q":
-			sys.exit("\nBye...\n")
+    while True:
+        subprocess.call("clear")
+        print()
+        talwin (m,"red")
+        talwin("\nY To Continue || N To Back || Q To Quit : \n-","blue",end="")
+        y_n=input().strip()
+        if y_n=="Y" or y_n=="y":
+            break
+        elif y_n=="N" or y_n=="n":
+            return main()
+        elif y_n=="q" or y_n=="Q":
+            sys.exit("\nBye...\n")
 
 
 def install_broadcom_driver():
-	__install_kernel_headers_devel()
-	install_rpmfusionrepos()
-	check=subprocess.call("dnf install akmod-wl -y --best",shell=True)
-	if check!=0:
-		return main("Install Broadcom WiFi Driver Fail.")
+    __install_kernel_headers_devel()
+    install_rpmfusionrepos()
+    check=subprocess.call("dnf install akmod-wl -y --best",shell=True)
+    if check!=0:
+        return main("Install Broadcom WiFi Driver Fail.")
 
 
 
 def set_selinux_permissive():
-	check_root()
-	result = ""
-	b = False
-	with open("/etc/selinux/config","r") as myfile: 
-		for line in myfile.readlines():
-			line = line.strip() 
-			if line.replace(" ","").startswith("SELINUX="):
-				if line.split("=",1)[1].strip() == "enforcing":
-					line = "SELINUX=permissive"
-					b = True
-			result+=line+"\n"
+    check_root()
+    result = ""
+    b = False
+    with open("/etc/selinux/config","r") as myfile: 
+        for line in myfile.readlines():
+            line = line.strip() 
+            if line.replace(" ","").startswith("SELINUX="):
+                if line.split("=",1)[1].strip() == "enforcing":
+                    line = "SELINUX=permissive"
+                    b = True
+            result+=line+"\n"
 
         
-	if not b:
-		return main("Nothing to do.")
-	else:
-		with open("/etc/selinux/config","w") as myfile:
-			myfile.write(result)
+    if not b:
+        return main("Nothing to do.")
+    else:
+        with open("/etc/selinux/config","w") as myfile:
+            myfile.write(result)
 
-	 
+     
 def main(ms=""):
-	subprocess.call("clear")
-	talwin("\nhttp://www.arfedora.blogspot.com/","red")
-	if len(ms)!=0:
-		ms="((((%s))))"%ms
-	while True:
-		talwin("\nChoice Number :\n","blue")
-		print("\
+    subprocess.call("clear")
+    talwin("\nhttp://www.arfedora.blogspot.com/","red")
+    if len(ms)!=0:
+        ms="((((%s))))"%ms
+    while True:
+        talwin("\nChoice Number :\n","blue")
+        print("\
 1-Install RPMFUSION Repos.\t\t\t\t\t\t \
 2-Install Codecs.\n\n\n\
 3-Install kernel-heasers kernel-devel.\t\t\t\t\t \
@@ -289,95 +294,95 @@ def main(ms=""):
 12-Install Broadcom WiFi Driver.\n\n\n\
 13-Set Selinux To Permissive (IF NOT DISABLED).\t\t\t\t \
 14-Install All (Without Drivers And Selinux).")
-		
-		talwin("\n%s\n"%ms,"red")
-		talwin("Choice Number || q to Exit.\n-","blue",end="")
-		answer=input().strip()
-		ms=""
-		if answer=="1":
-			msg("Install RPMFUSION Repos.")
-			install_rpmfusionrepos()
-			return main("Install RPMFUSION Repos Success.")
-		elif answer=="2":
-			msg("Install Codecs.")
-			install_codecs()
-			return main("Install Codecs Success.")
+        
+        talwin("\n%s\n"%ms,"red")
+        talwin("Choice Number || q to Exit.\n-","blue",end="")
+        answer=input().strip()
+        ms=""
+        if answer=="1":
+            msg("Install RPMFUSION Repos.")
+            install_rpmfusionrepos()
+            return main("Install RPMFUSION Repos Success.")
+        elif answer=="2":
+            msg("Install Codecs.")
+            install_codecs()
+            return main("Install Codecs Success.")
 
-		elif answer=="3":
-			msg("Install kernel-heasers kernel-devel.")
-			__install_kernel_headers_devel(True)
+        elif answer=="3":
+            msg("Install kernel-heasers kernel-devel.")
+            __install_kernel_headers_devel(True)
 
-			
-		elif answer=="4":
-			msg("Install VirtualBox From RPMFUSION Repos.")
-			installvirtuablox()
-			return main("\nInstall VirtualBox Success Please Reboot Your PC.\n")
-			
-		elif answer=="5":
-			msg("Install Google Chrome.")
-			install_googlechrome()
-			if gb:
-				return main("Install Google Chrome Success.")
-			return  main("Google Chrome Support GNU/LINUX 64bit Only.")
-		elif answer=="6":
-			msg("Add KeepCache To DNF.")
-			add_keepcache()
-			return main("Add KeepCache Option Success.")
-			
-		elif answer=="7":
-			msg("Add FastestMirror To DNF.")
-			add_fastestmirror()
-			return main("Add FastestMirror Option Success.")
-			
-			
-		elif answer=="8":
-			msg("Install Arabic Fonts.")
-			install_arabicfonts()
-			return main("Install Arabic Fonts Success.")
-			
-		elif answer=="9":
-			msg("Install Compression Programs unzip/unar... .")
-			install_compressp()
-			return main("Install Compression Programs Success.")
-			
-		elif answer=="10":
-			msg("Install Torrent Client deluge.")
-			install_torrent_client()
-			return main("Install deluge Success.")
+            
+        elif answer=="4":
+            msg("Install VirtualBox From RPMFUSION Repos.")
+            installvirtuablox()
+            return main("\nInstall VirtualBox Success Please Reboot Your PC.\n")
+            
+        elif answer=="5":
+            msg("Install Google Chrome.")
+            install_googlechrome()
+            if gb:
+                return main("Install Google Chrome Success.")
+            return  main("Google Chrome Support GNU/LINUX 64bit Only.")
+        elif answer=="6":
+            msg("Add KeepCache To DNF.")
+            add_keepcache()
+            return main("Add KeepCache Option Success.")
+            
+        elif answer=="7":
+            msg("Add FastestMirror To DNF.")
+            add_fastestmirror()
+            return main("Add FastestMirror Option Success.")
+            
+            
+        elif answer=="8":
+            msg("Install Arabic Fonts.")
+            install_arabicfonts()
+            return main("Install Arabic Fonts Success.")
+            
+        elif answer=="9":
+            msg("Install Compression Programs unzip/unar... .")
+            install_compressp()
+            return main("Install Compression Programs Success.")
+            
+        elif answer=="10":
+            msg("Install Torrent Client deluge.")
+            install_torrent_client()
+            return main("Install deluge Success.")
 
-		elif answer=="11":
-			msg("Add User To Sudoers.")
-			add_user_to_sudoers()
-			return main("Success Please Restart You PC.")
+        elif answer=="11":
+            msg("Add User To Sudoers.")
+            add_user_to_sudoers()
+            return main("Success Please Restart You PC.")
 
-		elif answer=="12":
-			msg("Install Broadcom WiFi Driver.")
-			install_broadcom_driver()
-			return main("Install Broadcom WiFi Driver Success Please Restart You PC.")
+        elif answer=="12":
+            msg("Install Broadcom WiFi Driver.")
+            install_broadcom_driver()
+            return main("Install Broadcom WiFi Driver Success Please Restart You PC.")
 
-		elif answer=="13":
-			msg("Set Selinux To Permissive.")
-			set_selinux_permissive()
-			return main("Success Please Restart You PC.")
+        elif answer=="13":
+            msg("Set Selinux To Permissive.")
+            set_selinux_permissive()
+            return main("Success Please Restart You PC.")
 
-		elif answer=="14":
-			msg("Install All.")
-			install_codecs()
-			installvirtuablox()
-			install_googlechrome()
-			add_keepcache()
-			add_fastestmirror()
-			install_arabicfonts()
-			install_compressp()
-			install_torrent_client()
-			return main("Install All Success.")
-			
-		elif answer=="q" or answer=="Q":
-			sys.exit("\nBye...\n")
-		
-	
+        elif answer=="14":
+            msg("Install All.")
+            install_codecs()
+            installvirtuablox()
+            install_googlechrome()
+            add_keepcache()
+            add_fastestmirror()
+            install_arabicfonts()
+            install_compressp()
+            install_torrent_client()
+            return main("Install All Success.")
+            
+        elif answer=="q" or answer=="Q":
+            sys.exit("\nBye...\n")
+        
+    
 
 if __name__=="__main__":
-	main()
+    main()
 
 
