@@ -55,7 +55,7 @@ d_name=distro_name_version["ID"]
 d_version=distro_name_version["VERSION_ID"]
 
 def init_check():
-    versions=["25","26","27","28"]
+    versions=["25","26","27","28","29"]
     if d_name!="ojuba":
         if d_name!="fedora":
             sys.exit("Fedora Not Found.")
@@ -138,23 +138,14 @@ gpgkey=https://dl.google.com/linux/linux_signing_key.pub
 
 def __install_kernel_headers_devel(d=False):
     check_root()
-    kernel=__get_kernel_name()
-    if arch=="x86_64":
-        check=subprocess.call("dnf -y --best install kernel kernel-devel  kernel-headers \
-        @c-development @development-tools",shell=True)
-        if check!=0:
-            return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
-        else:
-            if d:
-                return main("Success ,Restart System And Boot From Newest Kernel.")
+    check=subprocess.call("dnf -y --best install kernel kernel-devel  kernel-headers \
+    @c-development @development-tools",shell=True)
+    if check!=0:
+        return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
     else:
-        check=subprocess.call("dnf -y --best install kernel-PAE-devel kernel-devel  kernel-headers \
-        @c-development @development-tools"%(kernel,kernel,kernel),shell=True)
-        if check!=0:
-            return main("Error Check Your Connection || Check dnf || Update And Reboot System And Try Again.")
-        else:
-            if d:
-                return main("Success ,Restart System And Boot From Newest Kernel.")
+        if d:
+            return main("Success ,Restart System And Boot From Newest Kernel.")
+
 
 def installvirtuablox():
     check_root()
@@ -211,7 +202,7 @@ def install_codecs():
         
 def install_torrent_client():
     check_root()
-    check=subprocess.call("dnf install  --best -y deluge",shell=True)
+    check=subprocess.call("dnf install  --best -y qbittorrent",shell=True)
     if check!=0:
         return main("Error Check Your Connection || Check dnf.")
 
@@ -287,7 +278,7 @@ def main(ms=""):
 7-Add FastestMirror To DNF.\t\t\t\t\t\t \
 8-Install Arabic Fonts.\n\n\n\
 9-Install Compression Programs unzip/unar... .\t\t\t\t \
-10-Install Torrent Client deluge.\n\n\n\
+10-Install Torrent Client qbittorrent.\n\n\n\
 11-Add User To Sudoers.\t\t\t\t\t\t\t \
 12-Install Broadcom WiFi Driver.\n\n\n\
 13-Set Selinux To Permissive (IF NOT DISABLED).\t\t\t\t \
