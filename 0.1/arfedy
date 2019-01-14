@@ -37,25 +37,45 @@ arch=platform.machine()
 gb=True
 
 
-def get_distro_name():
-    result={}
-    if not os.path.isfile("/etc/os-release"):
+def get_distro_name(location="/etc/os-release"):
+    result=""
+    if not os.path.isfile(location):
         return None
-    with open("/etc/os-release","r") as myfile:
-        for l in myfile.readlines():
-            if l.startswith("ID"):
-                result.setdefault("ID",l.split("=")[1].strip())
-            elif l.startswith("VERSION_ID"):
-                result.setdefault("VERSION_ID",l.split("=")[1].strip())
-    return result
+    with open(location) as myfile:
+        for l in myfile:
+            if l.startswith("ID") and not l.startswith("ID_"):
+                result=l.split("=",1)[1].strip()
+    return result.replace("\"","").replace("'","")
+
+def get_distro_name_like(location="/etc/os-release"):
+    result=""
+    if not os.path.isfile(location):
+        return None
+    with open(location) as myfile:
+        for l in myfile:
+            if l.startswith("ID_LIKE") :
+                result=l.split("=",1)[1].strip()
+    if not result:
+        result = get_distro_name(location)
+    return result.replace("\"","").replace("'","")
+    
+def get_distro_version(location="/etc/os-release"):
+    result=""
+    if not os.path.isfile(location):
+        return None
+    with open(location) as myfile:
+        for l in myfile:
+            if l.startswith("VERSION_ID"):
+                result=l.split("=",1)[1].strip()
+    return result.replace("\"","").replace("'","")
 
 
-distro_name_version=get_distro_name()
-d_name=distro_name_version["ID"]
-d_version=distro_name_version["VERSION_ID"]
+
+d_name=get_distro_name_like()
+d_version=get_distro_version()
 
 def init_check():
-    versions=["25","26","27","28","29"]
+    versions=["25","26","27","28","29","30"]
     if d_name!="ojuba":
         if d_name!="fedora":
             sys.exit("Fedora Not Found.")
@@ -84,28 +104,12 @@ def __get_kernel_name():
 
 def add_keepcache():
     check_root()
-    keepcache="keepcache = True\n"
-    b=True
-    with open("/etc/dnf/dnf.conf","r") as myfile:
-        for line in myfile.readlines():
-            if line.strip().startswith("keepcache"):
-                b=False
-    if b:
-        with open("/etc/dnf/dnf.conf","a") as myfile:
-            myfile.write(keepcache)
+    subprocess.call("dnf config-manager --setopt=keepcache=True --save",shell=True)
 
 def add_fastestmirror():
     check_root()
-    fastestmirror="fastestmirror = True\n"
-    b=True
-    with open("/etc/dnf/dnf.conf","r") as myfile:
-        for line in myfile.readlines():
-            if line.strip().startswith("fastestmirror"):
-                b=False
-    if b:
-        with open("/etc/dnf/dnf.conf","a") as myfile:
-            myfile.write(fastestmirror)
-            
+    subprocess.call("dnf config-manager --setopt=fastestmirror=True --save",shell=True)
+              
 def install_arabicfonts():
     check_root()
     check=subprocess.call("dnf -y --best install @arabic-support google-noto-kufi-arabic-fonts google-noto-naskh-arabic-fonts google-noto-naskh-arabic-ui-fonts google-noto-sans-old-south-arabian-fonts",shell=True)
@@ -151,7 +155,7 @@ def installvirtuablox():
     check_root()
     __install_kernel_headers_devel()
     install_rpmfusionrepos()
-    subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 VirtualBox-5.3 --setopt=clean_requirements_on_remove=False \
+    subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 VirtualBox-5.3 VirtualBox-6.0 VirtualBox-6.1 VirtualBox-6.2 VirtualBox-6.3 VirtualBox-6.4 --setopt=clean_requirements_on_remove=False \
     --setop=strict=False -y --best",shell=True)
     check=subprocess.call("dnf -y --best install VirtualBox",shell=True)
     if check!=0:
