@@ -75,7 +75,7 @@ d_name=get_distro_name_like()
 d_version=get_distro_version()
 
 def init_check():
-    versions=["25","26","27","28","29","30"]
+    versions=["25","26","27","28","29","30","32","33"]
     if d_name!="ojuba":
         if d_name!="fedora":
             sys.exit("Fedora Not Found.")
@@ -112,7 +112,7 @@ def add_fastestmirror():
               
 def install_arabicfonts():
     check_root()
-    check=subprocess.call("dnf -y --best install @arabic-support google-noto-kufi-arabic-fonts google-noto-naskh-arabic-fonts google-noto-naskh-arabic-ui-fonts google-noto-sans-old-south-arabian-fonts",shell=True)
+    check=subprocess.call("dnf -y --best install dejavu-sans-fonts dejavu-sans-mono-fonts kacst-art-fonts kacst-book-fonts kacst-decorative-fonts kacst-digital-fonts kacst-farsi-fonts kacst-letter-fonts kacst-naskh-fonts kacst-office-fonts kacst-one-fonts kacst-pen-fonts kacst-poster-fonts kacst-qurn-fonts kacst-screen-fonts kacst-title-fonts kacst-titlel-fonts paktype-naqsh-fonts paktype-tehreer-fonts sil-lateef-fonts sil-scheherazade-fonts google-noto-kufi-arabic-fonts google-noto-naskh-arabic-fonts google-noto-naskh-arabic-ui-fonts google-noto-sans-old-south-arabian-fonts",shell=True)
     if check!=0:
             return main("Error Check Your Connection || Check dnf.")
     
@@ -155,7 +155,7 @@ def installvirtuablox():
     check_root()
     __install_kernel_headers_devel()
     install_rpmfusionrepos()
-    subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 VirtualBox-5.3 VirtualBox-6.0 VirtualBox-6.1 VirtualBox-6.2 VirtualBox-6.3 VirtualBox-6.4 --setopt=clean_requirements_on_remove=False \
+    subprocess.call("dnf remove VirtualBox-5.0 VirtualBox-5.1 VirtualBox-5.2 VirtualBox-5.3 VirtualBox-6.0 VirtualBox-6.1 VirtualBox-6.2 VirtualBox-6.3 VirtualBox-6.4 VirtualBox-6.5 VirtualBox-6.6 VirtualBox-6.7 --noautoremove \
     --setop=strict=False -y --best",shell=True)
     check=subprocess.call("dnf -y --best install VirtualBox",shell=True)
     if check!=0:
@@ -192,17 +192,20 @@ def install_codecs():
         if check!=0:
             return main("Error Check Your Connection || Check dnf.")
     else:
-        check=subprocess.call("dnf install compat-ffmpeg28 gstreamer{1,}-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} libmpg123 lame-libs gstreamer1-libav gstreamer-plugins-espeak xine-lib xine-lib-devel xine-lib-extras gstreamer-plugins-fc gstreamer-rtsp lame gstreamer-ffmpeg ffmpeg x264 faad2 flac amrnb amrwb gstreamer1-plugins-bad-free-gtk mozilla-openh264 gstreamer1-plugin-openh264 ffmpeg-libs openh264 lsdvd libdvdread libdvdnav  gstreamer1-plugins-good-extras gstreamer1-vaapi  -y --best --setopt=strict=0",shell=True)
+        check=subprocess.call("dnf install gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel  -y --best --setopt=strict=0",shell=True)
+        if check!=0:
+            return main("Error Check Your Connection || Check dnf.")
+        check=subprocess.call("dnf install lame\* --exclude=lame-devel  -y --best --setopt=strict=0",shell=True)
         if check!=0:
             return main("Error Check Your Connection || Check dnf.")
         subprocess.call("dnf config-manager --set-enabled fedora-cisco-openh264",shell=True)
-        check = subprocess.call("dnf install --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264",shell=True)
+        check = subprocess.call("dnf install --best -y gstreamer1-plugin-openh264 mozilla-openh264",shell=True)
         if check!=0:
             print("Clean metadata.")
             subprocess.call("dnf clean dbcache",shell=True)
             subprocess.call("dnf clean metadata",shell=True)
             print("Done.")
-            subprocess.call("dnf install --best -y mozilla-openh264 gstreamer1-plugin-openh264 openh264 --setopt=strict=0",shell=True)
+            subprocess.call("dnf install --best -y gstreamer1-plugin-openh264 mozilla-openh264 --setopt=strict=0",shell=True)
         
 def install_torrent_client():
     check_root()
