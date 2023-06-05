@@ -1,3 +1,8 @@
+
+# Deprecated please try arfedora-weclome
+https://github.com/yucefsourani/arfedora-welcome
+
+
 # arfedy
 Python Script to  install multimedia codecs and additional software.
 
